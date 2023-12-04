@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minha Wishlist</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
+  <script>
+    function addProduct() {
+      const productInput = document.getElementById('productInput');
+      const wishlistItems = document.getElementById('wishlistItems');
+      const li = document.createElement('li');
+      li.textContent = productInput.value;
+      wishlistItems.appendChild(li);
+      productInput.value = '';
+    }
+
+    function generateToken(wishlistItems) {
+      const token = btoa(wishlistItems);
+      return token;
+    }
+
+    function decodeToken() {
+      const token = document.getElementById('tokenInput').value;
+      if (token.trim() === '') {
+        alert('O token está vazio.');
+        return;
+      }
+      
+      const decodedWishlist = atob(token);
+      displayDecodedWishlist(decodedWishlist);
+    }
+
+    function saveWishlist() {
+      const wishlistItems = Array.from(document.getElementById('wishlistItems').children)
+        .map(li => li.textContent)
+        .join('\n');
+      
+      if (wishlistItems.trim() === '') {
+        alert('A lista de desejos está vazia.');
+        return;
+      }
+          
+      localStorage.setItem('wishlist', wishlistItems.trim());
+
+      const token = generateToken(wishlistItems);
+      localStorage.setItem('wishlistToken', token);
+      document.getElementById('tokenInput').value = token;
+    }
+
+    function displayDecodedWishlist(decodedWishlist) {
+      const wishlistItemsArray = decodedWishlist.split('\n').filter(item => item !== '');
+      const decodedWishlistElement = document.getElementById('decodedWishlist');
+      decodedWishlistElement.innerHTML = '';
+
+      wishlistItemsArray.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        decodedWishlistElement.appendChild(li);
+      });
+    }
+
+    function clearData() {
+      document.getElementById('wishlistItems').innerHTML = '';
+      document.getElementById('tokenInput').value = '';
+      document.getElementById('decodedWishlist').innerHTML = '';
+    }
+
+    window.onload = function() {
+      clearData();
+      const savedWishlist = localStorage.getItem('wishlist');
+      const savedToken = localStorage.getItem('wishlistToken');
+
+      if (savedWishlist && savedToken) {
+        document.getElementById('wishlistItems').innerHTML = savedWishlist;
+        document.getElementById('tokenInput').value = savedToken;
+      }
+    }
+
+
+    function redirectToHomePage() {
+        window.location.href = 'index.html';
+      }
+  </script>
+</head>
+<body>
+   
+  <div class="container">
+   <div>
+     <button onclick="redirectToHomePage()">Home wishlist</button>
+      <h2>Token Wishlist</h2>
+      <textarea id="tokenInput" rows="4" cols="50" placeholder="Cole o token aqui"></textarea>
+      <button onclick="decodeToken()">Decode Token</button>
+    </div>
+    <br><br>
+    <div>
+      <h2>List Wishlist</h2>
+      <ul id="decodedWishlist"></ul>
+    </div>
+  
+    <div class="donation-warning">
+      <p>Ajude-nos a continuar oferecendo este serviço gratuito! <br>
+        Considere fazer uma doação via PIX para esta chave:</p>
+      <img src="/Sem título.png" alt="Chave PIX para doações">
+    </div>
+    
+</div>
+  
+</body>
+</html>

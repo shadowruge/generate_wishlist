@@ -1,0 +1,4 @@
+Geração do token
+Decodificação do token
+Salvando o token no localStorage
+Recuperando a lista de desejos usando o token

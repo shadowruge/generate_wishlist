@@ -1,0 +1,12 @@
+div {
+
+    margin: 20px;
+  
+  }
+  
+  .article {
+  
+    flex: 1; /* Stretches the articles to fill up the remaining space */
+  
+  }
+  
